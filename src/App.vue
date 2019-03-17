@@ -1,19 +1,103 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div class="ui grid">
+      <div class="row">
+        <div class="three wide column">
+          <the-params-input @start="start"></the-params-input>
+        </div>
+        <div class="ten wide column">
+          <the-game 
+            v-if="params !== null" 
+            :params="params"
+            :focus="onFocus"
+            @update="agentUpdate"
+            @done="agentsUpdate"
+          ></the-game>
+        </div>
+        <div class="three wide column">
+          <the-table :agents="agents" @focus="focus"></the-table>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Vue from 'vue';
 
-export default {
-  name: 'app',
+import TheParamsInput from './components/TheParamsInput'
+import TheGame from './components/TheGame'
+import TheTable from './components/TheTable'
+import { InputParameters } from '../../snake/controllers/Controller';
+
+export default Vue.extend({
+  name: 'snnake-app',
+
   components: {
-    HelloWorld
+    TheParamsInput,
+    TheGame,
+    TheTable
+  },
+
+  data: () => ({
+    params: null,
+
+    agents: [],
+    onFocus: -1,
+  }),
+
+  methods: {
+    start(params) {
+      this.params = params
+      this.tmpAgents = new Array(this.params.nagents)
+    },
+
+    agentUpdate(agent) {
+      const elem = this.agents.filter(x => x.id === agent.snake.id)
+      
+      if (elem.length !== 0) {
+        elem[0].score = agent.score.getScore()
+        elem[0].alive = agent.snake.isAlive
+      } else {
+        this.agents.push({
+          id: agent.snake.id, 
+          score: agent.score.getScore(),
+          alive: agent.snake.isAlive
+        })
+      }
+    },
+
+    agentsUpdate(agentsObj) {
+      const tmp = []
+
+      agentsObj.forEach(agent => {
+        console.log('agent=', agent)
+        tmp.push({
+          id: agent.snake.id,
+          score: agent.score.getScore(),
+          alive: agent.snake.isAlive
+        })
+      })
+
+      tmp.sort((a, b) => {
+        const ascore = a.score
+        const bscore = b.score
+
+        if (ascore > bscore) return -1
+        else if (ascore < bscore) return 1
+        else 0
+      })
+
+      this.agents = tmp
+
+      console.log(this.agents)
+    },
+
+    focus(agentId) {
+      this.onFocus = agentId
+    }
   }
-}
+});
 </script>
 
 <style>
