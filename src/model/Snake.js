@@ -1,5 +1,5 @@
-import { LinkedList }   from "../utils/LinkedList"
-import Store            from "../utils/Store"
+import { LinkedList }   from '../utils/LinkedList'
+import Store            from '../utils/Store'
 
 /**
  * HTML canvas has origo at top left corner.

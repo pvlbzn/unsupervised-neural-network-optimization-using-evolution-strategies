@@ -1,6 +1,6 @@
-import { FeatureExtractor } from "../../utils/networks/Feature";
-import { Reward } from "../Reward";
-import Store from "../../utils/Store";
+import { FeatureExtractor } from '../network/Feature'
+import { Reward } from '../model/Reward'
+import Store from '../utils/Store'
 
 export interface Controller {
   construct(): void

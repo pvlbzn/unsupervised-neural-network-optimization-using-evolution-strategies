@@ -1,11 +1,11 @@
-import { Controller, GameState, AgentState } from "./Controller";
-import { InputParameters } from "./Controller";
-import Store from "../../utils/Store";
-import { Board } from "../Board";
-import { Snake } from "../Snake";
-import { Reward } from "../Reward";
-import { FitnessScore } from "../Score";
-import { NetworkController } from "../../utils/networks/Network";
+import { Controller, GameState, AgentState } from './Controller'
+import { InputParameters } from './Controller'
+import { Board } from '../model/Board'
+import { Snake } from '../model/Snake'
+import { Reward } from '../model/Reward'
+import { FitnessScore } from '../model/Score'
+import { NetworkController } from '../network/Network'
+import Store from '../utils/Store'
 
 
 export class NeturalNetworkController implements Controller {

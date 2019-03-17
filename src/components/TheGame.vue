@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import { NeturalNetworkController } from '../../../snake/controllers/NeuralNetworkController';
-import Store from '../../../utils/Store'
+import { NeturalNetworkController } from '../controller/NeuralNetworkController.ts'
+import Store from '../utils/Store.ts'
 
 
 export default {

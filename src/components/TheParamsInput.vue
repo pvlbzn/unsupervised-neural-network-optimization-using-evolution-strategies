@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { InputParameters } from '../../../snake/controllers/Controller.ts';
+import { InputParameters } from '../controller/Controller.ts'
 
 
 export default {

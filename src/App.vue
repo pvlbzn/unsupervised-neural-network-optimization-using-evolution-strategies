@@ -23,12 +23,11 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
+import Vue from 'vue'
 import TheParamsInput from './components/TheParamsInput'
 import TheGame from './components/TheGame'
 import TheTable from './components/TheTable'
-import { InputParameters } from '../../snake/controllers/Controller';
+import { InputParameters } from './controller/Controller'
 
 export default Vue.extend({
   name: 'snnake-app',

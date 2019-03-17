@@ -1,5 +1,4 @@
-// import synaptic from '../../ui/node_modules/synaptic/dist/synaptic'
-import { FeatureSet } from '../networks/Feature'
+import { FeatureSet } from '../network/Feature'
 
 
 export interface Network {
