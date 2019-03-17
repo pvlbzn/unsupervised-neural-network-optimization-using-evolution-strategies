@@ -1,6 +1,7 @@
 import { FeatureExtractor } from '../network/Feature'
 import { Reward } from '../model/Reward'
 import Store from '../utils/Store'
+import { NetworkController } from '@/network/Network';
 
 export interface Controller {
   construct(): void
@@ -34,7 +35,7 @@ export class AgentState {
   snake: any
   reward: any
   score: any
-  network: any
+  network: NetworkController
 
   constructor(snake: any, reward: any, score: any, network: any) {
     this.snake = snake
@@ -51,10 +52,10 @@ export class AgentState {
   }
 
   private calculateStep(boardRef: any) {
-    const features = new FeatureExtractor(this.snake, boardRef, this.reward)
-    const prediction = this.network.predict(features.extract())
-
-    console.log(`prediction=${prediction}`)
+    const features = new FeatureExtractor(this.snake, boardRef, this.reward).extract()
+    const prediction = this.network.predict(features)
+  
+    this.network.net.print()
 
     const findNextStep = (p0: number, p1: number, p2: number) => {
       if (p0 > p1 && p0 > p2) return 2
@@ -64,6 +65,8 @@ export class AgentState {
     }
 
     const nextStep = findNextStep(prediction[0], prediction[1], prediction[2])
+
+    console.log(nextStep)
 
     if (nextStep === 1) this.snake.left()
     else if (nextStep === 2) this.snake.right()

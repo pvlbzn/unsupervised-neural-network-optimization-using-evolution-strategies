@@ -36,13 +36,13 @@ export class NeturalNetworkController implements Controller {
 
   private initBoard() {
     this.board = new Board(this.params.xcells, this.params.ycells, this.params.csize)
-      .init(document.getElementById('canvas-panel')) // TODO: move this into params
+      .init(<HTMLElement> document.getElementById('canvas-panel')) // TODO: move this into params
       .render([])
   }
 
   private initAgents() {
     for (let i = 0; i < this.params.nagents; i++) {
-      const a = new Snake(i).init(this.params.xcells, this.params.ycells)
+      const a = new Snake(i, this.params.xcells, this.params.ycells).init(this.params.xcells, this.params.ycells) // TODO: refactor xcells ycells
       const r = new Reward(this.params.xcells, this.params.ycells)
       const s = new FitnessScore(a)
       const n = new NetworkController('n1') // TODO: move this to params

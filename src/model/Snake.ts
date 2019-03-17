@@ -119,6 +119,9 @@ export class Snake {
       .insertHead(new Node(midX + 0, midY, x, y))
       .insertHead(new Node(midX + 1, midY, x, y))
       .insertHead(new Node(midX + 2, midY, x, y))
+      .insertHead(new Node(midX + 3, midY, x, y))
+      .insertHead(new Node(midX + 4, midY, x, y))
+      .insertHead(new Node(midX + 5, midY, x, y))
 
     return this
   }

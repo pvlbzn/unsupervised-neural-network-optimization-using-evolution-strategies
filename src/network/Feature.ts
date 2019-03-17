@@ -1,3 +1,7 @@
+import { Snake } from '@/model/Snake';
+import { Reward } from '@/model/Reward';
+import { Board } from '@/model/Board';
+
 /**
 * Feature extractor.
 * 
@@ -10,8 +14,9 @@
 * on the experiment running.
 */
 export class FeatureExtractor implements Extractor {
-  e: Extractor
-  constructor(public agent: object, public environment: object, public reward: object) { 
+  private e: Extractor
+
+  constructor(public agent: Snake, public environment: Board, public reward: Reward) { 
       this.e = new E1(agent, environment, reward)
   }
 
@@ -38,6 +43,18 @@ export class FeatureSet {
   add(another: FeatureSet): FeatureSet {
       return new FeatureSet(this.features.concat(another.features))
   }
+
+  print(asVector: boolean): void {
+    if (asVector) {
+      let res = '<Features('
+      this.features.forEach((f: Feature) => res += f.value + ' ')
+      res += ')>'
+  
+      console.log(res)
+    } else {
+      throw new Error('not implemented')
+    }
+  }
 }
 
 interface Extractor {
@@ -62,7 +79,7 @@ interface Extractor {
 *  - food on down
 */
 class E1 implements Extractor {
-  constructor(public agent: any, public environment: any, public reward: any) {}
+  constructor(public agent: Snake, public environment: Board, public reward: Reward) {}
 
   private extractNavigation(): FeatureSet {
       const s = this.agent

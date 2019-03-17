@@ -8,6 +8,8 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@types/synaptic": "^1.0.3",
+    "synaptic": "^1.1.4",
     "vue": "^2.6.6"
   },
   "devDependencies": {
