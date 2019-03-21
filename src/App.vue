@@ -72,7 +72,6 @@ export default Vue.extend({
       const tmp = []
 
       agentsObj.forEach(agent => {
-        console.log('agent=', agent)
         tmp.push({
           id: agent.snake.id,
           score: agent.score.getScore(),
@@ -90,8 +89,6 @@ export default Vue.extend({
       })
 
       this.agents = tmp
-
-      console.log(this.agents)
     },
 
     focus(agentId) {

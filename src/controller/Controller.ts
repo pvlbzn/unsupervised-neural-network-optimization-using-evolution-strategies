@@ -2,6 +2,8 @@ import { FeatureExtractor } from '../network/Feature'
 import { Reward } from '../model/Reward'
 import Store from '../utils/Store'
 import { NetworkController } from '@/network/Network';
+import { FitnessScore } from '@/model/Score';
+import { Snake } from '@/model/Snake';
 
 export interface Controller {
   construct(): void
@@ -32,9 +34,9 @@ export class InputParameters {
 }
 
 export class AgentState {
-  snake: any
-  reward: any
-  score: any
+  snake: Snake
+  reward: Reward
+  score: FitnessScore
   network: NetworkController
 
   constructor(snake: any, reward: any, score: any, network: any) {
@@ -65,8 +67,6 @@ export class AgentState {
     }
 
     const nextStep = findNextStep(prediction[0], prediction[1], prediction[2])
-
-    console.log(nextStep)
 
     if (nextStep === 1) this.snake.left()
     else if (nextStep === 2) this.snake.right()
@@ -106,7 +106,6 @@ export class GameState {
   }
 
   foreach(f: Function) {
-    console.log('for eaching')
     this.agents.forEach((a: AgentState) => f(a))
   }
 
@@ -116,5 +115,9 @@ export class GameState {
 
   getStates() {
     return this.agents
+  }
+
+  wipe() {
+    this.agents = new Array<AgentState>()
   }
 }

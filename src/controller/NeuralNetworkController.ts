@@ -6,6 +6,7 @@ import { Reward } from '../model/Reward'
 import { FitnessScore } from '../model/Score'
 import { NetworkController } from '../network/Network'
 import Store from '../utils/Store'
+import { Evolution } from '@/network/Evolution';
 
 
 export class NeturalNetworkController implements Controller {
@@ -53,8 +54,20 @@ export class NeturalNetworkController implements Controller {
     }
   }
 
+  private initFromNets(nets: Array<NetworkController>) {
+    for (let i = 0; i < nets.length; i++) {
+      const a = new Snake(i, this.params.xcells, this.params.ycells).init(this.params.xcells, this.params.ycells) // TODO: refactor xcells ycells
+      const r = new Reward(this.params.xcells, this.params.ycells)
+      const s = new FitnessScore(a)
+      const n = nets[i]
+
+      const state = new AgentState(a, r, s, n)
+      
+      this.gameState.add(state)
+    }
+  }
+
   private registerCallbacks() {
-    console.log('store=', Store.reactor)
     Store.reactor.register('collision')
     Store.reactor.add('collision', (s: any) => {
       s.kill()
@@ -88,10 +101,10 @@ export class NeturalNetworkController implements Controller {
   
       this.board.renderMany(this.gameState.getAgents())
   
-      if (this.deadSnakes === this.params.nagents) {
+      if (this.deadSnakes == this.params.nagents) {
         Store.reactor.dispatch('controllerGenerationDone', this.gameState.getStates())
-        console.log('TIME TO EVOLVE')
         this.stop()
+        this.evolve()
       }
     }
 
@@ -110,15 +123,12 @@ export class NeturalNetworkController implements Controller {
     else this.run()
   }
 
-  /**
-   * Focus agent with `agentId`.
-   * 
-   * @param agentId 
-   */
-  focus(agentId: Number): void {
-    // If game is running just set color property of a snake to
-    // focused. If game is not running than set color property
-    // to focused and re-render the board.
-    
+  evolve(): void {
+    console.log('evolving')
+    this.deadSnakes = 0
+    const nets = new Evolution(this.gameState.getStates()).evolve()
+    this.gameState.wipe()
+    this.initFromNets(nets)
+    this.run()
   }
 }

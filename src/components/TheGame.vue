@@ -31,7 +31,6 @@ export default {
 
   watch: {
     focus(after, before) {
-      console.log(after, before)
       Store.reactor.dispatch('controllerSelectAgent', { newId: after, oldId: before })
     }
   }

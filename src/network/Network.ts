@@ -3,6 +3,8 @@ import { Neuron, Layer } from 'synaptic'
 
 
 export interface Network {
+  net: any
+
   predict(fs: FeatureSet): Array<number>
   clone(): void
   print(): void
@@ -28,6 +30,16 @@ export class NetworkController {
     else throw new Error(`network ${this.name} not found, available networks are ${this.availableNets}`)
   }
 
+  static createNewFromWeights(w: Array<number>, name: string): NetworkController {
+    const nc = new NetworkController(name)
+    
+    for (let i = 0; i < nc.net.net.layers.hidden[0].size; i++) {
+      nc.net.net.layers.hidden[0].list[i].activation = w[i]
+    }
+
+    return nc
+  }
+
   predict(fs: FeatureSet): Array<number> {
     return this.net.predict(fs)
   }
@@ -39,7 +51,7 @@ class N1 implements Network {
 
   constructor() {
     this.lib = window.synaptic
-    console.log('initializing N1 network...')
+
     const x0 = new this.lib.Layer(12)
     const x1 = new this.lib.Layer(32)
     const x2 = new this.lib.Layer(3)
@@ -56,13 +68,21 @@ class N1 implements Network {
     this.randomize()
   }
 
+  clone() {
+
+  }
+
   private randomize(): void {
+    const w1 = tf.randomNormal([1, 32]).arraySync()[0]
     for (let i = 0; i < this.net.layers.hidden[0].list.length; i++) {
-      this.net.layers.hidden[0].list[i].activation = Math.random()
+      this.net.layers.hidden[0].list[i].activation = w1[i]
+      this.net.layers.hidden[0].list[i].bias = 0
     }
 
+    const w2 = tf.randomNormal([1, 3]).arraySync()[0]
     for (let i = 0; i < this.net.layers.output.list.length; i++) {
-      this.net.layers.output.list[i].activation = Math.random()
+      this.net.layers.output.list[i].activation = w2[i]
+      this.net.layers.output.list[i].bias = 0
     }
   }
 
@@ -90,25 +110,16 @@ class N1 implements Network {
     xN += '>'
 
     const res = x0 + '\n' + hidden + '\n' + xN
-
-    console.log('res=', res)
   }
 
   predict(fs: FeatureSet): Array<number> {
-    console.log('N1 predicting...')
-
     const inputVector = fs.features.map(x => x.value)
     this.net.layers.input.activate(inputVector)
     const p = this.softmax(this.net.activate(inputVector))
 
     fs.print(true)
-    console.log('prediction=', p)
-    
+
     return p
-  }
-
-  clone() {
-
   }
 
   private softmax(arr: any) {
