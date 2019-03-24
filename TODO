@@ -6,9 +6,13 @@ Allow input features selection from UI. Checkboxes will do.
 
 Average Population Score
 ~~~~~~~~~~~~~~~~~~~~~~~~
-
+done
 
 
 Run Each Generation n Times
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+done
 
+Mate More Agents
+~~~~~~~~~~~~~~~~
+Only two parents lead to degradataion
