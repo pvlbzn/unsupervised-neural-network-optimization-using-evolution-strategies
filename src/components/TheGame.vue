@@ -25,6 +25,7 @@ export default {
 
     Store.reactor.add('controllerAgentUpdate', agentState => this.$emit('update', agentState))
     Store.reactor.add('controllerGenerationDone', agents => this.$emit('done', agents))
+    Store.reactor.add('controllerHistoryUpdate', history => this.$emit('generation', history))
 
     this.controller.run()
   },

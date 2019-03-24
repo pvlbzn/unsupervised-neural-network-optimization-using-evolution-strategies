@@ -109,8 +109,16 @@ export class GameState {
     this.agents.forEach((a: AgentState) => f(a))
   }
 
+  map(f: Function) {
+    return this.agents.map((a: AgentState) => f(a))
+  }
+
   getAgents() {
     return this.agents.map((a: AgentState) => a.snake)
+  }
+
+  getRewards() {
+    return this.agents.map((a: AgentState) => a.reward)
   }
 
   getStates() {

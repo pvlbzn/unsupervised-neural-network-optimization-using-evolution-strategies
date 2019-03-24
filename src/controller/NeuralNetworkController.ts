@@ -13,16 +13,20 @@ export class NeturalNetworkController implements Controller {
   params: InputParameters
 
   private deadSnakes: number
-  private board: any
+  private board: Board
   private gameState: GameState
   private loop: any
   private isRunning: boolean
+  private generationCount: number
+  private tryNumber: number
 
   constructor(params: InputParameters) {
     this.params = params
 
     this.isRunning = false
     this.deadSnakes = 0
+    this.generationCount = 0
+    this.tryNumber = 0
     this.gameState = new GameState()
   }
 
@@ -77,6 +81,7 @@ export class NeturalNetworkController implements Controller {
     Store.reactor.register('controllerSelectAgent')
     Store.reactor.register('controllerAgentUpdate')
     Store.reactor.register('controllerGenerationDone')
+    Store.reactor.register('controllerHistoryUpdate')
     Store.reactor.add('controllerSelectAgent', (ids: any) => {
       this.gameState.getAgents().map((agent: any) => {
         if (agent.id === ids.newId) 
@@ -100,11 +105,26 @@ export class NeturalNetworkController implements Controller {
       })
   
       this.board.renderMany(this.gameState.getAgents())
+      this.board.renderRewards(this.gameState.getRewards())
   
       if (this.deadSnakes == this.params.nagents) {
-        Store.reactor.dispatch('controllerGenerationDone', this.gameState.getStates())
-        this.stop()
-        this.evolve()
+        if (this.tryNumber >= 2) {
+          Store.reactor.dispatch('controllerGenerationDone', this.gameState.getStates())
+          this.stop()
+          this.evolve()
+        } else {
+          // Back all agents to life
+          console.log(`try #${this.tryNumber}`)
+          this.stop()
+          this.gameState.foreach((a: AgentState) => {
+            a.reward = new Reward(this.board.x, this.board.y)
+            a.score.resetPenalty()
+            a.snake.reset()
+          })
+          this.deadSnakes = 0
+          this.tryNumber += 1
+          this.run()
+        }
       }
     }
 
@@ -124,8 +144,15 @@ export class NeturalNetworkController implements Controller {
   }
 
   evolve(): void {
-    console.log('evolving')
+    const avgStore = this.gameState
+      .map((a: AgentState) => a.score.getScore())
+      .reduce((a, b) => a + b) / this.params.nagents
+    Store.reactor.dispatch('controllerHistoryUpdate', { generation: this.generationCount, score: avgStore })
+
+    this.tryNumber = 0
     this.deadSnakes = 0
+    this.generationCount += 1
+
     const nets = new Evolution(this.gameState.getStates()).evolve()
     this.gameState.wipe()
     this.initFromNets(nets)

@@ -126,6 +126,13 @@ export class Snake {
     return this
   }
 
+  reset() {
+    this.isAlive = true
+    this.data = new LinkedList()
+    this.direction = 0
+    this.init(this.maxX, this.maxY)
+  }
+
   /**
    * Perform a snake step.
    * 

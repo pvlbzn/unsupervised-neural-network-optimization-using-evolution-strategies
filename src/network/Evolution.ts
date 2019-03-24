@@ -77,7 +77,7 @@ export class Evolution {
     for (let i = 1; i < arr.length; i++) {
       const chance = Math.random()
 
-      if (chance > 0.75) {
+      if (chance > 0.65) {
         schema.push(i)
       }
     }
@@ -101,8 +101,8 @@ export class Evolution {
 
   private mutate(w: Array<number>): Array<number> {
     for (let i = 0; i < w.length; i++) {
-      // Basically 30% chance of mutation with 5% noise
-      if (Math.random() > 0.7) {
+      // Basically 10% chance of mutation with 5% noise
+      if (Math.random() > 0.8) {
         if (Math.random() > 0.5) {
           w[i] = w[i] + (Math.random() * 0.05)
         } else {

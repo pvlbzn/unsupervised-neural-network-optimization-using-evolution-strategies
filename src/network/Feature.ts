@@ -50,7 +50,7 @@ export class FeatureSet {
       this.features.forEach((f: Feature) => res += f.value + ' ')
       res += ')>'
   
-      console.log(res)
+      // console.log(res)
     } else {
       throw new Error('not implemented')
     }

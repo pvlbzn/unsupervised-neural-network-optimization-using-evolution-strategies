@@ -3,6 +3,7 @@ interface Experiment {
   makeStep(): void
   countReward(): void
   penalty(): boolean
+  resetPenalty(): void
 }
 
 /**
@@ -35,6 +36,8 @@ export class FitnessScore implements Experiment {
   countReward(): void { this.experiment.countReward() }
 
   penalty(): boolean { return this.experiment.penalty() }
+
+  resetPenalty(): void { this.experiment.resetPenalty() }
 }
 
 /**
@@ -44,57 +47,57 @@ export class FitnessScore implements Experiment {
 * by simple number of steps snake performed. More steps means more
 * time without dying.
 */
-class Experiment1 implements Experiment {
-  snake: object
-  score: number
+// class Experiment1 implements Experiment {
+//   snake: object
+//   score: number
 
-  constructor(snake: object) {
-      this.snake = snake
-      this.score = 0
-  }
+//   constructor(snake: object) {
+//       this.snake = snake
+//       this.score = 0
+//   }
 
-  getScore(): number {
-      return this.score
-  }
+//   getScore(): number {
+//       return this.score
+//   }
 
-  makeStep(): void {
-      this.score += 1
-  }
+//   makeStep(): void {
+//       this.score += 1
+//   }
 
-  countReward(): void {
-      this.score += 1000
-  }
+//   countReward(): void {
+//       this.score += 1000
+//   }
 
-  penalty(): boolean { return false }
-}
+//   penalty(): boolean { return false }
+// }
 
 
 /**
 * Experiment 2
-*/
-class Experiment2 implements Experiment {
-  snake: object
-  score: number
+// */
+// class Experiment2 implements Experiment {
+//   snake: object
+//   score: number
 
-  constructor(snake: object) {
-      this.snake = snake
-      this.score = 1000
-  }
+//   constructor(snake: object) {
+//       this.snake = snake
+//       this.score = 1000
+//   }
 
-  getScore(): number {
-      return this.score
-  }
+//   getScore(): number {
+//       return this.score
+//   }
 
-  makeStep(): void {
-      this.score -= 1
-  }
+//   makeStep(): void {
+//       this.score -= 1
+//   }
 
-  countReward(): void {
-      this.score += 1000
-  }
+//   countReward(): void {
+//       this.score += 1000
+//   }
 
-  penalty(): boolean { return false }
-}
+//   penalty(): boolean { return false }
+// }
 
 /**
 * Experiment 3
@@ -107,7 +110,7 @@ class Experiment3 implements Experiment {
   constructor(snake: object) {
       this.snake = snake
       this.score = 0
-      this.energy = 100
+      this.energy = 300
   }
 
   getScore(): number {
@@ -115,17 +118,21 @@ class Experiment3 implements Experiment {
   }
 
   makeStep(): void {
-      this.score += 10
+      this.score += 1
       this.energy -= 1
   }
 
   countReward(): void {
-      this.score += 1000
-      this.energy += 1000
+      this.score += 250
+      this.energy += 100
   }
 
   penalty(): boolean {
       if (this.energy <= 0) return true
       else return false
+  }
+
+  resetPenalty(): void {
+      this.energy = 300
   }
 }

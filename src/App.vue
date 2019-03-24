@@ -4,6 +4,7 @@
       <div class="row">
         <div class="three wide column">
           <the-params-input @start="start"></the-params-input>
+          <the-history :records="history"></the-history>
         </div>
         <div class="ten wide column">
           <the-game 
@@ -11,6 +12,7 @@
             :params="params"
             :focus="onFocus"
             @update="agentUpdate"
+            @generation="historyUpdate"
             @done="agentsUpdate"
           ></the-game>
         </div>
@@ -28,6 +30,7 @@ import Vue from 'vue';
 import TheParamsInput from './components/TheParamsInput'
 import TheGame from './components/TheGame'
 import TheTable from './components/TheTable'
+import TheHistory from './components/TheHistory'
 import { InputParameters } from './controller/Controller'
 
 
@@ -37,13 +40,15 @@ export default Vue.extend({
   components: {
     TheParamsInput,
     TheGame,
-    TheTable
+    TheTable,
+    TheHistory
   },
 
   data: () => ({
     params: null,
 
     agents: [],
+    history: [],
     onFocus: -1,
   }),
 
@@ -89,6 +94,11 @@ export default Vue.extend({
       })
 
       this.agents = tmp
+    },
+
+    historyUpdate(h) {
+      console.log(`generation = ${h.generation} score = ${h.score}`)
+      this.history.push(h)
     },
 
     focus(agentId) {
