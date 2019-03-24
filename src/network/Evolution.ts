@@ -4,7 +4,23 @@ import { Neuron } from 'synaptic'
 
 class EvolvingAgent { constructor(public score: number, public net: Network) {} }
 
-export class Evolution {
+interface Evolver {
+  evolve(): Array<NetworkController>
+}
+
+export class Evolution implements Evolver {
+  private engine: Evolver
+
+  constructor(private agents: Array<AgentState>) {
+    this.engine = new PrimitiveEvolver(agents)
+  }
+
+  evolve() {
+    return this.engine.evolve()
+  }
+}
+
+class PrimitiveEvolver implements Evolver {
   constructor(private agents: Array<AgentState>) {}
 
   evolve() {
