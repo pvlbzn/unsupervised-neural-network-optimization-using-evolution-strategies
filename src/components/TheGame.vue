@@ -11,7 +11,6 @@ export default {
   name: 'snnake-game',
 
   props: {
-    params: { type: Object, required: true },
     focus: { type: Number, required: true },
   },
 
@@ -20,6 +19,8 @@ export default {
   }),
 
   mounted: function() {
+    console.log(Store.getParams())
+    
     this.controller = new NeturalNetworkController(this.params)
     this.controller.construct()
 

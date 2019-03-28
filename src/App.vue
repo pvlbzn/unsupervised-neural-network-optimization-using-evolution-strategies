@@ -8,8 +8,7 @@
         </div>
         <div class="ten wide column">
           <the-game 
-            v-if="params !== null" 
-            :params="params"
+            v-if="isInitialized" 
             :focus="onFocus"
             @update="agentUpdate"
             @generation="historyUpdate"
@@ -45,7 +44,7 @@ export default Vue.extend({
   },
 
   data: () => ({
-    params: null,
+    isInitialized: false,
 
     agents: [],
     history: [],
@@ -53,9 +52,8 @@ export default Vue.extend({
   }),
 
   methods: {
-    start(params) {
-      this.params = params
-      this.tmpAgents = new Array(this.params.nagents)
+    start() {
+      this.isInitialized = true
     },
 
     agentUpdate(agent) {

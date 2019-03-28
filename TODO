@@ -16,3 +16,13 @@ done
 Mate More Agents
 ~~~~~~~~~~~~~~~~
 Only two parents lead to degradataion
+
+
+Hyperparameters
+~~~~~~~~~~~~~~~
+
+Move all hyperparameters to class and reuse it. Take note of each heperparameter
+and document observations
+
+Score
+Start from 200, add score for getting closer to reward, subs for just steps

@@ -1,9 +1,12 @@
-export class Reward {
-  x: number
-  y: number
+import _ from "lodash"
 
-  constructor(x: number, y: number) {
-      this.x = Math.floor(Math.random() * x) 
-      this.y = Math.floor(Math.random() * y)
+export class Reward {
+  constructor(public x: number, public y: number) { }
+
+  static generate(xlimit: number, ylimit: number): Reward {
+    const x = _.random(0, xlimit - 1)
+    const y = _.random(0, ylimit - 1)
+
+    return new Reward(x, y)
   }
 }

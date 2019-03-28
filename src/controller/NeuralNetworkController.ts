@@ -7,10 +7,11 @@ import { FitnessScore } from '../model/Score'
 import { NetworkController } from '../network/Network'
 import Store from '../utils/Store'
 import { Evolution } from '@/network/Evolution';
+import { HParams } from '@/model/Hyperparameters';
 
 
 export class NeturalNetworkController implements Controller {
-  params: InputParameters
+  params: HParams
 
   private deadSnakes: number
   private board: Board
@@ -20,13 +21,13 @@ export class NeturalNetworkController implements Controller {
   private generationCount: number
   private tryNumber: number
 
-  constructor(params: InputParameters) {
-    this.params = params
+  constructor() {
+    this.params = Store.getParams()
 
     this.isRunning = false
     this.deadSnakes = 0
     this.generationCount = 0
-    this.tryNumber = 0
+    this.tryNumber = 1
     this.gameState = new GameState()
   }
 
@@ -40,17 +41,22 @@ export class NeturalNetworkController implements Controller {
   }
 
   private initBoard() {
-    this.board = new Board(this.params.xcells, this.params.ycells, this.params.csize)
+    this.board = new Board(this.params.numberOfRows, this.params.numberOfCols, this.params.cellSize)
       .init(<HTMLElement> document.getElementById('canvas-panel')) // TODO: move this into params
       .render([])
   }
 
   private initAgents() {
-    for (let i = 0; i < this.params.nagents; i++) {
-      const a = new Snake(i, this.params.xcells, this.params.ycells).init(this.params.xcells, this.params.ycells) // TODO: refactor xcells ycells
-      const r = new Reward(this.params.xcells, this.params.ycells)
+    for (let i = 0; i < this.params.numberOfAgents; i++) {
+      const cols = this.params.numberOfCols
+      const rows = this.params.numberOfRows
+
+      const a = new Snake(i, rows, cols).init(rows, cols) // TODO: refactor xcells ycells
+      const r = Reward.generate(rows, cols)
       const s = new FitnessScore(a)
-      const n = new NetworkController('n1') // TODO: move this to params
+      const n = new NetworkController(12, 32, 3) // TODO: move this to params
+
+      n.init()
 
       const state = new AgentState(a, r, s, n)
 
@@ -60,8 +66,11 @@ export class NeturalNetworkController implements Controller {
 
   private initFromNets(nets: Array<NetworkController>) {
     for (let i = 0; i < nets.length; i++) {
-      const a = new Snake(i, this.params.xcells, this.params.ycells).init(this.params.xcells, this.params.ycells) // TODO: refactor xcells ycells
-      const r = new Reward(this.params.xcells, this.params.ycells)
+      const cols = this.params.numberOfCols
+      const rows = this.params.numberOfRows
+
+      const a = new Snake(i, rows, cols).init(rows, cols) // TODO: refactor xcells ycells
+      const r = Reward.generate(rows, cols)
       const s = new FitnessScore(a)
       const n = nets[i]
 
@@ -107,8 +116,8 @@ export class NeturalNetworkController implements Controller {
       this.board.renderMany(this.gameState.getAgents())
       this.board.renderRewards(this.gameState.getRewards())
   
-      if (this.deadSnakes == this.params.nagents) {
-        if (this.tryNumber >= 2) {
+      if (this.deadSnakes == this.params.numberOfAgents) {
+        if (this.tryNumber >= Store.getParams().iterations) {
           Store.reactor.dispatch('controllerGenerationDone', this.gameState.getStates())
           this.stop()
           this.evolve()
@@ -117,7 +126,7 @@ export class NeturalNetworkController implements Controller {
           console.log(`try #${this.tryNumber}`)
           this.stop()
           this.gameState.foreach((a: AgentState) => {
-            a.reward = new Reward(this.board.x, this.board.y)
+            a.reward = Reward.generate(this.board.x, this.board.y)
             a.score.resetPenalty()
             a.snake.reset()
           })
@@ -146,10 +155,10 @@ export class NeturalNetworkController implements Controller {
   evolve(): void {
     const avgStore = this.gameState
       .map((a: AgentState) => a.score.getScore())
-      .reduce((a, b) => a + b) / this.params.nagents
+      .reduce((a, b) => a + b) / this.params.numberOfAgents
     Store.reactor.dispatch('controllerHistoryUpdate', { generation: this.generationCount, score: avgStore })
 
-    this.tryNumber = 0
+    this.tryNumber = 1
     this.deadSnakes = 0
     this.generationCount += 1
 

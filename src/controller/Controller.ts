@@ -4,6 +4,7 @@ import Store from '../utils/Store'
 import { NetworkController } from '@/network/Network';
 import { FitnessScore } from '@/model/Score';
 import { Snake } from '@/model/Snake';
+import { Board } from '@/model/Board';
 
 export interface Controller {
   construct(): void
@@ -57,8 +58,6 @@ export class AgentState {
     const features = new FeatureExtractor(this.snake, boardRef, this.reward).extract()
     const prediction = this.network.predict(features)
   
-    this.network.net.print()
-
     const findNextStep = (p0: number, p1: number, p2: number) => {
       if (p0 > p1 && p0 > p2) return 2
       else if (p1 > p0 && p1 > p2) return 1
@@ -75,14 +74,14 @@ export class AgentState {
     this.score.makeStep()
   }
 
-  private calculateReward(boardRef: any): boolean {
+  private calculateReward(boardRef: Board): boolean {
     const head = this.snake.getHead()
     const rewardX = this.reward.x
     const rewardY = this.reward.y
 
     if (head.x === rewardX && head.y === rewardY) {
       this.snake.grow()
-      this.reward = new Reward(this.reward.x, this.reward.y)
+      this.reward = Reward.generate(boardRef.x, boardRef.y)
       this.score.countReward()
     } else {
       if (this.score.penalty()) {
