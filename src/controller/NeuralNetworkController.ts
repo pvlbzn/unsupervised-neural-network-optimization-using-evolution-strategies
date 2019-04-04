@@ -53,7 +53,7 @@ export class NeturalNetworkController implements Controller {
 
       const a = new Snake(i, rows, cols).init(rows, cols) // TODO: refactor xcells ycells
       const r = Reward.generate(rows, cols)
-      const s = new FitnessScore(a)
+      const s = new FitnessScore(a, r)
       const n = new NetworkController(12, 32, 3) // TODO: move this to params
 
       n.init()
@@ -71,7 +71,7 @@ export class NeturalNetworkController implements Controller {
 
       const a = new Snake(i, rows, cols).init(rows, cols) // TODO: refactor xcells ycells
       const r = Reward.generate(rows, cols)
-      const s = new FitnessScore(a)
+      const s = new FitnessScore(a, r)
       const n = nets[i]
 
       const state = new AgentState(a, r, s, n)
@@ -116,7 +116,7 @@ export class NeturalNetworkController implements Controller {
       this.board.renderMany(this.gameState.getAgents())
       this.board.renderRewards(this.gameState.getRewards())
   
-      if (this.deadSnakes == this.params.numberOfAgents) {
+      if (this.deadSnakes >= this.params.numberOfAgents) {
         if (this.tryNumber >= Store.getParams().iterations) {
           Store.reactor.dispatch('controllerGenerationDone', this.gameState.getStates())
           this.stop()
@@ -135,6 +135,8 @@ export class NeturalNetworkController implements Controller {
           this.run()
         }
       }
+
+      console.log(`alive = ${this.gameState.getAgents().length - this.deadSnakes} dead = ${this.deadSnakes}`)
     }
 
     this.isRunning = true

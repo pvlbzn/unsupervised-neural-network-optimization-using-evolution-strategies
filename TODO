@@ -1,6 +1,5 @@
 Dynamic Parameters
 ~~~~~~~~~~~~~~~~~~
-
 Allow input features selection from UI. Checkboxes will do.
 
 
@@ -15,12 +14,11 @@ done
 
 Mate More Agents
 ~~~~~~~~~~~~~~~~
-Only two parents lead to degradataion
+done
 
 
 Hyperparameters
 ~~~~~~~~~~~~~~~
-
 Move all hyperparameters to class and reuse it. Take note of each heperparameter
 and document observations
 
