@@ -48,7 +48,7 @@
   <div class="ui input">
     <input type="text" v-model="iterations">
   </div>
-  <button class="ui button" @click="start">Start</button>
+  <button class="ui button" @click="start">{{ buttonString }}</button>
 </div>
 </template>
 
@@ -58,8 +58,17 @@ import Store from '../utils/Store.ts'
 import { HParams } from '@/model/Hyperparameters';
 
 
+const buttonStates = {
+  'start': 0,
+  'pause': 1,
+}
+
 export default {
   name: 'snnake-params',
+
+  props: {
+    isInitialized: { required: true }
+  },
 
   data: () => ({
     nAgents: 20,
@@ -73,28 +82,47 @@ export default {
     mutationChance: 0.9,
     mutationRate: 0.05,
     hiddenUnits: 32,
-    iterations: 3
+    iterations: 3,
+
+    buttonState: buttonStates.start
   }),
 
   methods: {
     start() {
-      const params = new HParams(
-        this.nAgents,
-        this.nRows,
-        this.nCols,
-        this.cellSize,
-        this.speed,
-        this.performanceRating,
-        this.sampleSize,
-        this.partitionFrequency,
-        this.mutationChance,
-        this.mutationRate,
-        this.hiddenUnits,
-        this.iterations)
+      if (this.isInitialized) {
+        if (this.buttonState === buttonStates.start) {
+          this.buttonState = buttonStates.pause
+        } else {
+          this.buttonState = buttonStates.start
+        }
+      } else {
+        const params = new HParams(
+          this.nAgents,
+          this.nRows,
+          this.nCols,
+          this.cellSize,
+          this.speed,
+          this.performanceRating,
+          this.sampleSize,
+          this.partitionFrequency,
+          this.mutationChance,
+          this.mutationRate,
+          this.hiddenUnits,
+          this.iterations)
 
-      Store.setParams(params)
+        Store.setParams(params)
+        
+        this.buttonState = buttonStates.pause
+      }
 
       this.$emit('start')
+    }
+  },
+
+  computed: {
+    buttonString() {
+      if (this.buttonState === buttonStates.start) return 'Start'
+      else return 'Pause'
     }
   }
 

@@ -3,7 +3,10 @@
     <div class="ui grid">
       <div class="row">
         <div class="three wide column">
-          <the-params-input @start="start"></the-params-input>
+          <the-params-input 
+            :isInitialized="isInitialized"
+            @start="start"
+          ></the-params-input>
         </div>
         <div class="thirteen wide column" style="display: flex; align-items: center; justify-content: center;">
           <the-game 
@@ -57,6 +60,7 @@ import TheChart from './components/TheChart'
 import TheSummary from './components/TheSummary'
 
 import { InputParameters } from './controller/Controller'
+import Store from './utils/Store'
 
 
 export default Vue.extend({
@@ -82,7 +86,11 @@ export default Vue.extend({
 
   methods: {
     start() {
-      this.isInitialized = true
+      if (this.isInitialized) {
+        Store.reactor.dispatch('controllerPlayPause')
+      } else {
+        this.isInitialized = true
+      }
     },
 
     agentUpdate(agent) {

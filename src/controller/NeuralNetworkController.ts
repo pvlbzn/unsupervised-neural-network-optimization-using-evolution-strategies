@@ -94,6 +94,11 @@ export class NeturalNetworkController implements Controller {
     Store.reactor.register('controllerGenerationDone')
     Store.reactor.register('controllerHistoryUpdate')
     Store.reactor.register('controllerAllHistoryUpdate')
+    Store.reactor.register('controllerPlayPause')
+
+    Store.reactor.add('controllerPlayPause', () => {
+      this.pause()
+    })
     Store.reactor.add('controllerSelectAgent', (ids: any) => {
       this.gameState.getAgents().map((agent: any) => {
         if (agent.id === ids.newId) 
@@ -150,9 +155,11 @@ export class NeturalNetworkController implements Controller {
   }
 
   pause(): void {
-    if (this.isRunning)
+    if (this.isRunning) {
       this.stop()
-    else this.run()
+    } else {
+      this.run()
+    }
   }
 
   evolve(): void {
