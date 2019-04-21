@@ -61,9 +61,6 @@ export default {
         const prev = this.records[this.records.length - 2]
         const curr = this.records[this.records.length - 1]
 
-        console.log("prev = ", prev)
-        console.log("curr = ", curr)
-
         this.stepDiff.push(Math.floor(percentageDiff(curr.steps, prev.steps)))
         this.durationDiff.push(Math.floor(percentageDiff(curr.duration, prev.duration)))
         this.rewardDiff.push(Math.floor(percentageDiff(curr.rewards, prev.rewards)))
@@ -147,8 +144,6 @@ export default {
 
     scoreDiffString(g) {
       if (g < 0) return
-
-      console.log(`score diff g=${g}, this.scoreDiff[g] = ${this.scoreDiff[g]}, this.scoreDiff = `, this.scoreDiff)
 
       if (this.scoreDiff[g] > 0) {
         return `+${this.scoreDiff[g]}%`

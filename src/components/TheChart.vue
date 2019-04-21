@@ -47,12 +47,9 @@ export default {
 
   methods: {
     updateData(entry) {
-      console.log('entry=', entry)
-      console.log('traces=', this.traces)
       // Create one line point out of average store,
       // thats 0 trace, and nagents traces for each data point
       const avg = Math.floor(entry.scores.reduce((x, y) => x + y)) / entry.scores.length
-      console.log('avg = ', avg)
       this.traces[0].x.push(entry.generation)
       this.traces[0].y.push(avg)
 

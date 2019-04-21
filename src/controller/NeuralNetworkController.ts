@@ -34,11 +34,8 @@ export class NeturalNetworkController implements Controller {
   }
 
   construct(): void {
-    console.log(`registering callbacks...`)
     this.registerCallbacks()
-    console.log(`initializing board...`)
     this.initBoard()
-    console.log(`initializing agents...`)
     this.initAgents()
   }
 
