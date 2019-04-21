@@ -88,6 +88,8 @@ export class Snake {
   data: LinkedList<Node>
   maxX: number
   maxY: number
+  steps: number
+  rewards: number
 
   constructor(id: number, maxX: number, maxY: number) {
     this.id = id
@@ -98,6 +100,8 @@ export class Snake {
 
     this.data = new LinkedList()
     this.direction = 0
+    this.steps = 0
+    this.rewards = 0
   }
 
   getData() {
@@ -106,6 +110,14 @@ export class Snake {
 
   getHead() {
     return this.data.getHead()
+  }
+
+  getSteps() {
+    return this.steps
+  }
+
+  getRewards() {
+    return this.rewards
   }
 
   select() {
@@ -175,6 +187,8 @@ export class Snake {
 
     if (this.selfCollisionCheck())
       Store.reactor.dispatch('collision', this)
+    else
+      this.steps += 1
   }
 
   selfCollisionCheck() {
@@ -211,6 +225,7 @@ export class Snake {
   }
 
   grow() {
+    this.rewards += 1
     this.data.insertTail(<Node> this.data.getTail())
   }
 
