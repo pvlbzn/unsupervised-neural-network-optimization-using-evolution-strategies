@@ -4,9 +4,8 @@
       <div class="row">
         <div class="three wide column">
           <the-params-input @start="start"></the-params-input>
-          <the-history :records="history"></the-history>
         </div>
-        <div class="ten wide column">
+        <div class="thirteen wide column" style="display: flex; align-items: center; justify-content: center;">
           <the-game 
             v-if="isInitialized" 
             :focus="onFocus"
@@ -15,15 +14,32 @@
             @generationAll="allHistoryUpdate"
             @done="agentsUpdate"
           ></the-game>
+        </div>
+      </div>
 
+      <div class="row" style="margin: 1em;">
+        <div class="six wide column">
+          <div style="text-align: center;">
+            <the-summary
+              v-if="isInitialized"
+              :history="allHistory"
+            ></the-summary>
+          </div>
+        </div>
+        <div class="ten wide column">
           <the-chart
             v-if="isInitialized && agents.length != 0"
             :nagents="agents.length"
             :history="allHistory"
           ></the-chart>
         </div>
-        <div class="three wide column">
-          <the-table :agents="agents" @focus="focus"></the-table>
+      </div>
+
+      <div class="row" style="margin: 1em;">
+        <div class="sexteen wide column">
+          <the-history 
+            :records="history"
+          ></the-history>
         </div>
       </div>
     </div>
@@ -38,6 +54,7 @@ import TheGame from './components/TheGame'
 import TheTable from './components/TheTable'
 import TheHistory from './components/TheHistory'
 import TheChart from './components/TheChart'
+import TheSummary from './components/TheSummary'
 
 import { InputParameters } from './controller/Controller'
 
@@ -50,7 +67,8 @@ export default Vue.extend({
     TheGame,
     TheTable,
     TheHistory,
-    TheChart
+    TheChart,
+    TheSummary
   },
 
   data: () => ({
@@ -110,7 +128,6 @@ export default Vue.extend({
     },
 
     allHistoryUpdate(h) {
-      console.log('received h=', h)
       this.allHistory.push(h)
     },
 
@@ -122,11 +139,26 @@ export default Vue.extend({
 </script>
 
 <style>
+@import url('https://rsms.me/inter/inter.css');
+html { font-family: 'Inter', sans-serif; }
+@supports (font-variation-settings: normal) {
+  html { font-family: 'Inter var', sans-serif; }
+}
+
+* {
+  font-family: 'Inter', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6, p, span {
+  font-family: 'Inter', sans-serif;
+}
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: 'Inter', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
 }
+
 </style>
