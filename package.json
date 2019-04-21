@@ -11,6 +11,7 @@
     "@tensorflow/tfjs": "^1.0.2",
     "@types/lodash": "^4.14.123",
     "@types/synaptic": "^1.0.3",
+    "core-js": "2",
     "lodash": "^4.17.11",
     "plotly": "^1.0.6",
     "synaptic": "^1.1.4",

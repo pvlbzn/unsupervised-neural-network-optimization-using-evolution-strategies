@@ -86,6 +86,8 @@ class TFEvolver implements Evolver {
       for (let i = 0; i < minSampleSize - selected.length; i++) {
         selected.push(candidates[i])
       }
+    } else {
+      console.warn(`ELSE-CASE: selected.length = ${selected.length} while minimum sample size ${minSampleSize}`)
     }
 
     return selected
@@ -99,10 +101,7 @@ class TFEvolver implements Evolver {
     // { in: Array<number>, out: Array<number> } 
     const rawNets = this.extractWeights(ea)
 
-    const newAgents = []
-    
-    // Add parents back to generation set
-    rawNets.forEach(n => newAgents.push(n))
+    const crossovers = []
 
     for (let i = 0; i < missing; i++) {
       const parents: Array<Weights> = this.pickTwo(rawNets)
@@ -111,12 +110,21 @@ class TFEvolver implements Evolver {
       const p2 = this.partition(parents[1], partitionSchema)
       const agent = this.produce(p1, p2)
 
-      newAgents.push(agent)
+      crossovers.push(agent)
     }
 
-    // Mutate all
+    // Mutate childs
     const mutated = []
-    newAgents.forEach(a => mutated.push(this.mutate(a)))
+    crossovers.forEach(a => mutated.push(this.mutate(a)))
+
+    const newAgents = new Array()
+
+    // Add parents back to generation set.
+    // Parents must be preserved to ensure non-degradation. There is no
+    // guarantee that childs will be at least as fit as parents, therefore
+    // keeping top performing parents is important.
+    rawNets.forEach(n => newAgents.push(n))
+    crossovers.forEach(n => newAgents.push(n))
 
     return newAgents
   }
@@ -165,17 +173,13 @@ class TFEvolver implements Evolver {
     const schema: Schema = { in: [], out: [] }
 
     for (let i = 1; i < arr.in.length; i++) {
-      const chance = Math.random()
-
-      if (chance > Store.getParams().partitionFrequency) {
+      if (Math.random() > 1 - Store.getParams().partitionFrequency) {
         schema.in.push(i)
       }
     }
 
     for (let i = 1; i < arr.out.length; i++) {
-      const chance = Math.random()
-
-      if (chance > Store.getParams().partitionFrequency) {
+      if (Math.random() > 1 - Store.getParams().partitionFrequency) {
         schema.out.push(i)
       }
     }
@@ -204,26 +208,48 @@ class TFEvolver implements Evolver {
 
   private mutate(w: Weights): Weights {
     for (let i = 0; i < w.in.length; i++) {
-      if(Math.random() > Store.getParams().mutationChance) {
-        if (Math.random() > 0.5) {
-          w.in[i] = w.in[i] + (Math.random() * Store.getParams().mutationRate)
+      if (Math.random() > 1 - Store.getParams().mutationChance) {
+        if (this.binaryRng() === 1) {
+          w.in[i] = w.in[i] + (this.boxMullerTransform() * Store.getParams().mutationRate)
         } else {
-          w.in[i] = w.in[i] - (Math.random() * Store.getParams().mutationRate)
+          w.in[i] = w.in[i] - (this.boxMullerTransform() * Store.getParams().mutationRate)
         }
       }
     }
 
     for (let i = 0; i < w.out.length; i++) {
-      if(Math.random() > Store.getParams().mutationChance) {
-        if (Math.random() > 0.5) {
-          w.out[i] = w.out[i] + (Math.random() * Store.getParams().mutationRate)
+      if (Math.random() > 1 - Store.getParams().mutationChance) {
+        if (this.binaryRng() === 1) {
+          w.out[i] = w.out[i] + (this.boxMullerTransform() * Store.getParams().mutationRate)
         } else {
-          w.out[i] = w.out[i] - (Math.random() * Store.getParams().mutationRate)
+          w.out[i] = w.out[i] - (this.boxMullerTransform() * Store.getParams().mutationRate)
         }
       }
     }
 
     return w
+  }
+
+  private boxMullerTransform(): number {
+    let u = 0
+    let v = 0
+
+    while(u === 0) 
+      u = Math.random()
+    while(v === 0) 
+      v = Math.random()
+
+    let num = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v )
+
+    num = num / 10.0 + 0.5
+
+    if (num > 1 || num < 0) 
+      return this.boxMullerTransform()
+    return num;
+  }
+
+  private binaryRng() {
+    return Math.round(Math.random())
   }
 
 }

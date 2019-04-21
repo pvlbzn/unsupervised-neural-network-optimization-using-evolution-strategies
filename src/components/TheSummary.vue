@@ -77,7 +77,12 @@ export default {
       const percentageDiff = (a, b) => {
         const n = modulo(a - b)
         const d = (a + b) / 2
-        return n / d * 100
+
+        if (a > b) {
+          return n / d * 100
+        } else {
+          return -(n / d * 100)
+        }
       }
 
       if (this.history.length >= 2) {
@@ -94,11 +99,11 @@ export default {
   computed: {
     stepDiffString() {
       if (this.stepDiff > 0) {
-        return `+ ${this.stepDiff} %`
+        return `+${this.stepDiff}%`
       } else if (this.stepDiff === 0) {
-        return '0 %'
+        return '0%'
       } else {
-        return `- ${this.stepDiff * -1} %`
+        return `-${this.stepDiff * -1}%`
       }
     },
 
@@ -114,11 +119,11 @@ export default {
 
     durationDiffString() {
       if (this.durationDiff > 0) {
-        return `+ ${this.durationDiff} %`
+        return `+${this.durationDiff}%`
       } else if (this.durationDiff === 0) {
-        return '0 %'
+        return '0%'
       } else {
-        return `- ${this.durationDiff * -1} %`
+        return `-${this.durationDiff * -1}%`
       }
     },
 
@@ -134,11 +139,11 @@ export default {
 
     rewardDiffString() {
       if (this.rewardDiff > 0) {
-        return `+ ${this.rewardDiff} %`
+        return `+${this.rewardDiff}%`
       } else if (this.rewardDiff < 0) {
-        return `- ${this.rewardDiff * -1} %`
+        return `-${this.rewardDiff * -1}%`
       } else {
-        return `0 %`
+        return `0%`
       }
     },
 

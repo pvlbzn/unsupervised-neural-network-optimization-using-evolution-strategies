@@ -161,7 +161,7 @@ class Experiment4 implements Experiment {
 
   constructor(public snake: Snake, public reward: Reward) {
     this.score = 0
-    this.energy = 80*3
+    this.energy = 500
     this.lastDistance = Number.MAX_SAFE_INTEGER
   }
 
@@ -176,7 +176,7 @@ class Experiment4 implements Experiment {
       this.score += 5
       this.energy -= 1
     } else {
-      this.score += 1
+      this.score -= 1
       this.energy -= 3
     }
 
@@ -204,7 +204,7 @@ class Experiment4 implements Experiment {
 
   countReward(): void {
     this.score += 500
-    this.energy += 100
+    this.energy += 500
   }
 
   penalty(): boolean {
@@ -213,6 +213,6 @@ class Experiment4 implements Experiment {
   }
 
   resetPenalty(): void {
-    this.energy = 80*3
+    this.energy = 500
   }
 }
