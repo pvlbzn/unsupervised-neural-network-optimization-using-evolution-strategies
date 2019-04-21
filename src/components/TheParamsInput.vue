@@ -1,50 +1,50 @@
 <template>
-<div>
-  <p>Number of agents</p>
+<div style="text-align: left; margin: 1em;">
+  <h3>Number of agents</h3>
   <div class="ui input">
     <input type="text" v-model="nAgents">
   </div>
-  <p>Number of rows</p>
+  <h3>Number of rows</h3>
   <div class="ui input">
     <input type="text" v-model="nRows">
   </div>
-  <p>Number of columns</p>
+  <h3>Number of columns</h3>
   <div class="ui input">
     <input type="text" v-model="nCols">
   </div>
-  <p>Cell size</p>
+  <h3>Cell size</h3>
   <div class="ui input">
     <input type="text" v-model="cellSize">
   </div>
-  <p>Game loop speed</p>
+  <h3>Game loop speed</h3>
   <div class="ui input">
     <input type="text" v-model="speed">
   </div>
-  <p>Performance rating multiplier</p>
+  <h3>Performance rating multiplier</h3>
   <div class="ui input">
     <input type="text" v-model="performanceRating">
   </div>
-  <p>Sample size</p>
+  <h3>Sample size</h3>
   <div class="ui input">
     <input type="text" v-model="sampleSize">
   </div>
-  <p>Partition frequency</p>
+  <h3>Partition frequency</h3>
   <div class="ui input">
     <input type="text" v-model="partitionFrequency">
   </div>
-  <p>Mutation chance</p>
+  <h3>Mutation chance</h3>
   <div class="ui input">
     <input type="text" v-model="mutationChance">
   </div>
-  <p>Mutation rate</p>
+  <h3>Mutation rate</h3>
   <div class="ui input">
     <input type="text" v-model="mutationRate">
   </div>
-  <p>Hidden units</p>
+  <h3>Hidden units</h3>
   <div class="ui input">
     <input type="text" v-model="hiddenUnits">
   </div>
-  <p>Generation interation</p>
+  <h3>Generation interation</h3>
   <div class="ui input">
     <input type="text" v-model="iterations">
   </div>
@@ -101,6 +101,29 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+h3 {
+  color: #525252;
+  font-size: 1em;
+  margin-top: 1em;
+  margin-bottom: 0.25em;
+  margin-left: 1em;
+}
 
+.ui.input input {
+  border: none;
+  background: #f1f1f1;
+  font-family: monospace;
+}
+
+.ui.input {
+  width: 100%;
+  min-width: 80px;
+}
+
+.ui.button {
+  margin-top: 1em;
+  width: 100%;
+  min-width: 80px;
+}
 </style>
