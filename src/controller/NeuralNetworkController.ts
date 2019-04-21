@@ -20,6 +20,7 @@ export class NeturalNetworkController implements Controller {
   private isRunning: boolean
   private generationCount: number
   private tryNumber: number
+  private startTime: Array<Date>
 
   constructor() {
     this.params = Store.getParams()
@@ -29,6 +30,7 @@ export class NeturalNetworkController implements Controller {
     this.generationCount = 0
     this.tryNumber = 1
     this.gameState = new GameState()
+    this.startTime = new Array<Date>()
   }
 
   construct(): void {
@@ -137,6 +139,7 @@ export class NeturalNetworkController implements Controller {
       }
     }
 
+    this.startTime.push(new Date())
     this.isRunning = true
     this.loop = setInterval(gameLoop, this.params.speed)
   }
@@ -156,12 +159,47 @@ export class NeturalNetworkController implements Controller {
     const avgStore = this.gameState
       .map((a: AgentState) => a.score.getScore())
       .reduce((a, b) => a + b) / this.params.numberOfAgents
-    Store.reactor.dispatch('controllerHistoryUpdate', { generation: this.generationCount, score: avgStore })
-    Store.reactor.dispatch('controllerAllHistoryUpdate', { generation: this.generationCount, scores: this.gameState.map((a: AgentState) => a.score.getScore())})
+
+    const avgTime = (() => {
+      const avg = new Array()
+      const now = new Date()
+      this.startTime.forEach((t: Date) => avg.push(now - t))
+
+      return avg.reduce((a, b) => a + b) / avg.length
+    })()
+
+    const avgSteps = (() => {
+      const steps = this.gameState.map((a: AgentState) => a.snake.getSteps())
+
+      return steps.reduce((a, b) => a + b) / steps.length
+    })()
+
+    const avgRewards = (() => {
+      const rewards = this.gameState.map((a: AgentState) => a.snake.getRewards())
+
+      return rewards.reduce((a, b) => a + b) / rewards.length
+    })()
+
+    Store.reactor.dispatch('controllerHistoryUpdate', { 
+      generation: this.generationCount, 
+      score: avgStore,
+      duration: avgTime,
+      steps: avgSteps,
+      rewards: avgRewards
+    })
+
+    Store.reactor.dispatch('controllerAllHistoryUpdate', { 
+      generation: this.generationCount, 
+      scores: this.gameState.map((a: AgentState) => a.score.getScore()),
+      duration: avgTime,
+      steps: avgSteps,
+      rewards: avgRewards
+    })
 
     this.tryNumber = 1
     this.deadSnakes = 0
     this.generationCount += 1
+    this.startTime = new Array()
 
     const nets = new Evolution(this.gameState.getStates()).evolve()
     this.gameState.wipe()
