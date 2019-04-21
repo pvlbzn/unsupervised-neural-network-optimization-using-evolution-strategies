@@ -12,8 +12,15 @@
             :focus="onFocus"
             @update="agentUpdate"
             @generation="historyUpdate"
+            @generationAll="allHistoryUpdate"
             @done="agentsUpdate"
           ></the-game>
+
+          <the-chart
+            v-if="isInitialized && agents.length != 0"
+            :nagents="agents.length"
+            :history="allHistory"
+          ></the-chart>
         </div>
         <div class="three wide column">
           <the-table :agents="agents" @focus="focus"></the-table>
@@ -30,6 +37,8 @@ import TheParamsInput from './components/TheParamsInput'
 import TheGame from './components/TheGame'
 import TheTable from './components/TheTable'
 import TheHistory from './components/TheHistory'
+import TheChart from './components/TheChart'
+
 import { InputParameters } from './controller/Controller'
 
 
@@ -40,7 +49,8 @@ export default Vue.extend({
     TheParamsInput,
     TheGame,
     TheTable,
-    TheHistory
+    TheHistory,
+    TheChart
   },
 
   data: () => ({
@@ -48,6 +58,7 @@ export default Vue.extend({
 
     agents: [],
     history: [],
+    allHistory: [],
     onFocus: -1,
   }),
 
@@ -95,8 +106,12 @@ export default Vue.extend({
     },
 
     historyUpdate(h) {
-      console.log(`generation = ${h.generation} score = ${h.score}`)
       this.history.push(h)
+    },
+
+    allHistoryUpdate(h) {
+      console.log('received h=', h)
+      this.allHistory.push(h)
     },
 
     focus(agentId) {

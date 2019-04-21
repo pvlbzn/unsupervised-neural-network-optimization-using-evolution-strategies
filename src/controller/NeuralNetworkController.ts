@@ -91,6 +91,7 @@ export class NeturalNetworkController implements Controller {
     Store.reactor.register('controllerAgentUpdate')
     Store.reactor.register('controllerGenerationDone')
     Store.reactor.register('controllerHistoryUpdate')
+    Store.reactor.register('controllerAllHistoryUpdate')
     Store.reactor.add('controllerSelectAgent', (ids: any) => {
       this.gameState.getAgents().map((agent: any) => {
         if (agent.id === ids.newId) 
@@ -123,7 +124,6 @@ export class NeturalNetworkController implements Controller {
           this.evolve()
         } else {
           // Back all agents to life
-          console.log(`try #${this.tryNumber}`)
           this.stop()
           this.gameState.foreach((a: AgentState) => {
             a.reward = Reward.generate(this.board.x, this.board.y)
@@ -135,8 +135,6 @@ export class NeturalNetworkController implements Controller {
           this.run()
         }
       }
-
-      console.log(`alive = ${this.gameState.getAgents().length - this.deadSnakes} dead = ${this.deadSnakes}`)
     }
 
     this.isRunning = true
@@ -159,6 +157,7 @@ export class NeturalNetworkController implements Controller {
       .map((a: AgentState) => a.score.getScore())
       .reduce((a, b) => a + b) / this.params.numberOfAgents
     Store.reactor.dispatch('controllerHistoryUpdate', { generation: this.generationCount, score: avgStore })
+    Store.reactor.dispatch('controllerAllHistoryUpdate', { generation: this.generationCount, scores: this.gameState.map((a: AgentState) => a.score.getScore())})
 
     this.tryNumber = 1
     this.deadSnakes = 0

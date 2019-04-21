@@ -18,15 +18,14 @@ export default {
     controller: null
   }),
 
-  mounted: function() {
-    console.log(Store.getParams())
-    
+  mounted: function() {    
     this.controller = new NeturalNetworkController(this.params)
     this.controller.construct()
 
     Store.reactor.add('controllerAgentUpdate', agentState => this.$emit('update', agentState))
     Store.reactor.add('controllerGenerationDone', agents => this.$emit('done', agents))
     Store.reactor.add('controllerHistoryUpdate', history => this.$emit('generation', history))
+    Store.reactor.add('controllerAllHistoryUpdate', allHistory => this.$emit('generationAll', allHistory))
 
     this.controller.run()
   },

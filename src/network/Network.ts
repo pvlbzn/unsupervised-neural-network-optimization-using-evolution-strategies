@@ -42,10 +42,6 @@ export class NetworkController {
     // FIXME: optimization needed
     const n = new N2(input, hidden, output)
 
-    console.log('created net n = ', n)
-    console.log('w = ', w)
-    console.log('\n\n')
-
     n.inputWeights = tf.tensor(w.in, n.inputWeights.shape)
     n.outputWeights = tf.tensor(w.out, n.outputWeights.shape)
 
@@ -193,8 +189,6 @@ class N2 implements Network {
   print() {
     const iw = this.inputWeights.toString()
     const ow = this.outputWeights.toString()
-
-    console.log(`<N2(\n iw=${iw} \n ow=${ow})>`)
   }
 
   cleanup() {
