@@ -60,57 +60,61 @@ export class FitnessScore implements Experiment {
  * by simple number of steps snake performed. More steps means more
  * time without dying.
  */
-// class Experiment1 implements Experiment {
-//   snake: object
-//   score: number
+class Experiment1 implements Experiment {
+  snake: object
+  score: number
 
-//   constructor(snake: object) {
-//       this.snake = snake
-//       this.score = 0
-//   }
+  constructor(snake: object, reward: object) {
+      this.snake = snake
+      this.score = 0
+  }
 
-//   getScore(): number {
-//       return this.score
-//   }
+  getScore(): number {
+      return this.score
+  }
 
-//   makeStep(): void {
-//       this.score += 1
-//   }
+  makeStep(): void {
+      this.score += 1
+  }
 
-//   countReward(): void {
-//       this.score += 1000
-//   }
+  countReward(): void {
+      this.score += 1000
+  }
 
-//   penalty(): boolean { return false }
-// }
+  penalty(): boolean { return false }
+
+  resetPenalty(): void { return }
+}
 
 
 /**
 * Experiment 2
-// */
-// class Experiment2 implements Experiment {
-//   snake: object
-//   score: number
+*/
+class Experiment2 implements Experiment {
+  snake: object
+  score: number
 
-//   constructor(snake: object) {
-//       this.snake = snake
-//       this.score = 1000
-//   }
+  constructor(snake: object) {
+      this.snake = snake
+      this.score = 1000
+  }
 
-//   getScore(): number {
-//       return this.score
-//   }
+  getScore(): number {
+      return this.score
+  }
 
-//   makeStep(): void {
-//       this.score -= 1
-//   }
+  makeStep(): void {
+      this.score -= 1
+  }
 
-//   countReward(): void {
-//       this.score += 1000
-//   }
+  countReward(): void {
+      this.score += 1000
+  }
 
-//   penalty(): boolean { return false }
-// }
+  penalty(): boolean { return false }
+
+  resetPenalty(): void { return }
+}
 
 /**
  * Experiment 3
@@ -158,10 +162,12 @@ class Experiment4 implements Experiment {
   score: number
   energy: number
   lastDistance: number
+  maxEnergy: number
 
   constructor(public snake: Snake, public reward: Reward) {
     this.score = 0
-    this.energy = 500
+    this.energy = 300
+    this.maxEnergy = 1000
     this.lastDistance = Number.MAX_SAFE_INTEGER
   }
 
@@ -204,7 +210,11 @@ class Experiment4 implements Experiment {
 
   countReward(): void {
     this.score += 500
-    this.energy += 500
+
+    if ((this.energy + 300) > this.maxEnergy)
+      this.energy = this.maxEnergy
+    else
+      this.energy += 300
   }
 
   penalty(): boolean {
@@ -213,6 +223,6 @@ class Experiment4 implements Experiment {
   }
 
   resetPenalty(): void {
-    this.energy = 500
+    this.energy = 300
   }
 }

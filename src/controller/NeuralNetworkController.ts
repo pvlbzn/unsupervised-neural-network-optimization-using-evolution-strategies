@@ -53,7 +53,7 @@ export class NeturalNetworkController implements Controller {
       const a = new Snake(i, rows, cols).init(rows, cols) // TODO: refactor xcells ycells
       const r = Reward.generate(rows, cols)
       const s = new FitnessScore(a, r)
-      const n = new NetworkController(12, 32, 3) // TODO: move this to params
+      const n = new NetworkController(12, this.params.hiddenUnits, 3) // TODO: move this to params
 
       n.init()
 

@@ -57,7 +57,7 @@ export class AgentState {
   private calculateStep(boardRef: any) {
     const features = new FeatureExtractor(this.snake, boardRef, this.reward).extract()
     const prediction = this.network.predict(features)
-  
+
     const findNextStep = (p0: number, p1: number, p2: number) => {
       if (p0 > p1 && p0 > p2) return 2
       else if (p1 > p0 && p1 > p2) return 1

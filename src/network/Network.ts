@@ -8,7 +8,6 @@ import * as tf from '@tensorflow/tfjs'
 
 
 export interface Network {
-  // net: any
   inputWeights: tf.Tensor
   outputWeights: tf.Tensor
 
@@ -55,93 +54,6 @@ export class NetworkController {
     return this.net.predict(fs)
   }
 }
-
-// class N1 implements Network {
-//   net: any
-//   lib: any
-
-//   constructor() {
-//     this.lib = window.synaptic
-
-//     const x0 = new this.lib.Layer(12)
-//     const x1 = new this.lib.Layer(32)
-//     const x2 = new this.lib.Layer(3)
-
-//     x0.project(x1)
-//     x1.project(x2)
-
-//     this.net = new this.lib.Network({
-//       input: x0,
-//       hidden: [x1],
-//       output: x2
-//     })
-
-//     this.randomize()
-//   }
-
-//   clone() {
-
-//   }
-
-//   private randomize(): void {
-//     // const w1 = tf.randomUniform([1, 32]).arraySync()[0]
-//     for (let i = 0; i < this.net.layers.hidden[0].list.length; i++) {
-//       this.net.layers.hidden[0].list[i].activation = _.random(0,1, true)
-//       this.net.layers.hidden[0].list[i].bias = 0
-//     }
-
-//     // const w2 = tf.randomUniform([1, 3]).arraySync()[0]
-//     for (let i = 0; i < this.net.layers.output.list.length; i++) {
-//       this.net.layers.output.list[i].activation = _.random(0,1, true)
-//       this.net.layers.output.list[i].bias = 0
-//     }
-//   }
-
-//   print(): void {
-//     let x0 = '<'
-//     this.net.layers.input.list.forEach((n: Neuron) => {
-//       x0 += `${n.activation} `
-//     })
-//     x0 += '>'
-
-//     let hidden = '<'
-//     this.net.layers.hidden.forEach((l: Layer) => {
-//       hidden += '\n<'
-//       l.list.forEach((n: Neuron) => {
-//         hidden += `${n.activation} `
-//       })
-//       hidden += '>'
-//     })
-//     hidden += '\n>'
-
-//     let xN = '<'
-//     this.net.layers.output.list.forEach((n: Neuron) => {
-//       xN += `${n.activation} `
-//     })
-//     xN += '>'
-
-//     const res = x0 + '\n' + hidden + '\n' + xN
-
-//     console.log(res)
-//   }
-
-//   predict(fs: FeatureSet): Array<number> {
-//     const inputVector = fs.features.map(x => x.value)
-//     this.net.layers.input.activate(inputVector)
-//     const p = this.softmax(this.net.activate(inputVector))
-
-//     fs.print(true)
-
-//     return p
-//   }
-
-//   private softmax(arr: any) {
-//     return arr.map((value: any, index: any) => {
-//         return Math.exp(value) / arr.map((y: any) => {
-//             return Math.exp(y) }).reduce((a: any, b: any) => {
-//                 return a + b })})
-//   }
-// }
 
 class N2 implements Network {
   input: number
